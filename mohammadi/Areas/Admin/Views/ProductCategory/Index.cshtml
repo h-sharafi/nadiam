@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Domain.ProductCategory>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="tr@(item.Id)">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Create", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    <button class="btn btn-danger deletepc" data-id="@(item.Id)">حذف</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+    $(document).on('click', '.deletepc', function(e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    Swal.fire({
+        title: 'مطمئنیذ?',
+        text: "فرایند زدودن قابل برگشت نیست!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'بله حذف کن!',
+        cancelButtonText: 'پشیمان شدم !'
+    }).then((result) => {
+        if (result.value) {
+            $.post("/Admin/ProductCategory/Delete", {id: id },
+                function(data, textStatus, jqXHR) {
+                    if (data.result) {
+                        $('#tr' + id).css('display', 'none');
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        );
+                    }else{
+                         Swal.fire(
+                            'خطا!',
+                            'زدوده نشد',
+                            'error'
+                        );
+                    }
+
+                },
+                "json"
+            );
+
+        }
+    });
+
+});
+
+    </script>
+
+}

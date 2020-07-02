@@ -1,0 +1,21 @@
+﻿@using  Domain;
+@model IEnumerable<ProductCategory>
+
+@foreach (var pc in Model)
+{
+    <p>@(pc.Name)</p>
+    <hr />
+    <div class="card-group">
+        @foreach (var item in pc.Products)
+        {
+            <div class="card" style="padding: 38px; margin: 21px;">
+                <img src="~/FileUplaod/@(item.ImageName)" class="card-img-top" alt="@(item.Name)">
+                <div class="card-body">
+                    <h5 class="card-title">@(item.Name)</h5>
+                    <p class="card-text"><button class="btn btn-outline-info addtoBasket" data-id="@(item.Id)">افزودن به سبد</button></p>
+                </div>
+            </div>
+        }
+
+    </div>
+}
