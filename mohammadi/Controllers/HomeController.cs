@@ -27,10 +27,8 @@ namespace mohammadi.Controllers
 
         public IActionResult Index()
         {
-            var list = new List<String>();
-            list.Add("hassan");
-            list.Add("sharafi");
-            return View(list);
+            var pcs = _productCatergoryService.GetList().Include(pc => pc.Products).ToList();
+            return View(pcs);
         }
 
         public IActionResult Privacy()
