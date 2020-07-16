@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application;
+using Application.Service;
 using Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,8 +47,9 @@ namespace mohammadi
 
             services.AddControllersWithViews();
 
-            services.AddScoped<ICrudGeneric<ProductCategory>, CrudGeneric<ProductCategory>>();
-            services.AddScoped<ICrudGeneric<Product>, CrudGeneric<Product>>();
+            services.AddScoped<IProductCategoryService, ProductCategoryService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IFileService, FileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

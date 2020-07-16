@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Application;
+using Application.Service;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ namespace mohammadi.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ICrudGeneric<ProductCategory> _productCatergoryService;
+        private readonly IProductCategoryService _productCatergoryService;
 
-        public HomeController(ILogger<HomeController> logger, ICrudGeneric<ProductCategory> productCatergoryService )
+        public HomeController(ILogger<HomeController> logger, IProductCategoryService productCatergoryService)
         {
             _logger = logger;
             this._productCatergoryService = productCatergoryService;
@@ -27,13 +28,13 @@ namespace mohammadi.Controllers
 
         public IActionResult Index()
         {
-            var pcs = _productCatergoryService.GetList().Include(pc => pc.Products).ToList();
+            var pcs = _productCatergoryService.GetQuery().Include(pc => pc.Products).ToList();
             return View(pcs);
         }
 
         public IActionResult Privacy()
         {
-        
+
             return View();
         }
 
@@ -49,7 +50,7 @@ namespace mohammadi.Controllers
         [HttpPost]
         public IActionResult ProductsPartial()
         {
-            var pcs = _productCatergoryService.GetList().Include(pc => pc.Products).ToList();
+            var pcs = _productCatergoryService.GetQuery().Include(pc => pc.Products).ToList();
             return PartialView("_productList", pcs);
         }
     }

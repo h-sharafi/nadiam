@@ -27,6 +27,8 @@ namespace Domain
         public ProductCategory ProductCategory { get; set; }
        
         public short ProductCategoryId { get; set; }
+        public ICollection<File> ImageFiles { get; set; }
+
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application;
+using Application.Service;
 using Domain;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace mohammadi.Areas.Admin.Controllers
 {
     public class ProductController : BaseController
     {
-        private readonly ICrudGeneric<Product> _productService;
-        private readonly ICrudGeneric<ProductCategory> _productCategoryService;
+        private readonly IProductService _productService;
+        private readonly IProductCategoryService _productCategoryService;
+        public IFileService _fileService { get; }
 
-        public ProductController(ICrudGeneric<Product> productService , ICrudGeneric<ProductCategory> productCategoryService)
+        public ProductController(IProductService productService, IProductCategoryService productCategoryService, IFileService fileService)
         {
+            this._fileService = fileService;
             this._productService = productService;
             this._productCategoryService = productCategoryService;
         }
@@ -25,7 +28,7 @@ namespace mohammadi.Areas.Admin.Controllers
         #region لیست محصولات
         public IActionResult Index()
         {
-            var result = _productService.GetList().ToList();
+            var result = _productService.GetQuery().ToList();
             return View(result);
         }
         #endregion
@@ -35,12 +38,13 @@ namespace mohammadi.Areas.Admin.Controllers
         #region ایجاد محصولات
         public IActionResult Create(short? id)
         {
-            var producCategory = _productCategoryService.GetList().AsNoTracking().Select(c => new SelectOptionViewModel { 
-                Key = c.Id.ToString(), 
+            var producCategory = _productCategoryService.GetQuery().AsNoTracking().Select(c => new SelectOptionViewModel
+            {
+                Key = c.Id.ToString(),
                 Value = c.Name
             }).ToList();
-          
-            var model = _productService.GetList().AsNoTracking().FirstOrDefault(p => p.Id == id) ?? new Product();
+
+            var model = _productService.GetQuery().AsNoTracking().FirstOrDefault(p => p.Id == id) ?? new Product();
             ViewBag.ProductCategories = new SelectList(producCategory, "Key", "Value", model.ProductCategoryId);
             return View(model);
         }
@@ -52,7 +56,7 @@ namespace mohammadi.Areas.Admin.Controllers
             {
                 if (product.ImageFile != null && product.ImageFile.Length != 0)
                 {
-                    product.ImageName =await _productService.SaveFile(product.ImageFile);
+                    product.ImageName = await _fileService.FileUplaod(product.ImageFile);
                 }
                 if (product.Id == 0)
                     _productService.Create(product);

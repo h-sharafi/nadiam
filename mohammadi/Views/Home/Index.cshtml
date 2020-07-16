@@ -4,8 +4,10 @@
     ViewBag.Title = "Home Page";
 }
 
-@await Html.PartialAsync("/Views/Home/_productList.cshtml")
+<vc:product></vc:product>
 
+@* @await Html.PartialAsync("/Views/Home/_productList.cshtml", new List<ProductCategory>())
+ *@
 
 
 

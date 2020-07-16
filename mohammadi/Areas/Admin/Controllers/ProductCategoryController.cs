@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application;
+using Application.Service;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -12,21 +13,21 @@ namespace mohammadi.Areas.Admin.Controllers
 {
     public class ProductCategoryController : BaseController
     {
-        private readonly ICrudGeneric<ProductCategory> _productCategoryService;
+        private readonly IProductCategoryService _productCategoryService;
 
-        public ProductCategoryController( ICrudGeneric<ProductCategory>  productCategoryService) 
+        public ProductCategoryController(IProductCategoryService productCategoryService)
         {
             this._productCategoryService = productCategoryService;
         }
         public IActionResult Index()
         {
-            var result = _productCategoryService.GetList().ToList();
+            var result = _productCategoryService.GetQuery().ToList();
             return View(result);
         }
         #region افزودن دسته بندی
         public IActionResult Create(short? id)
         {
-            var model = id == null ? new ProductCategory() : _productCategoryService.GetList().FirstOrDefault(p => p.Id == id);
+            var model = id == null ? new ProductCategory() : _productCategoryService.GetQuery().FirstOrDefault(p => p.Id == id);
             return View(model);
         }
 

@@ -13,11 +13,13 @@ namespace Persistence
 
         public DataContext(DbContextOptions options) : base(options) { }
         public DbSet<Product> Products { get; set; }
+        public int MyProperty { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ProductCategory>().HasOne(m => m.Parent).WithMany(fm => fm.Children).HasForeignKey(fk => fk.ParentId);
+            builder.Entity<File>().HasOne(m => m.ProductImage).WithMany(fm => fm.ImageFiles).HasForeignKey(fk => fk.ProductImageId);
             base.OnModelCreating(builder);
         }
     }

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public interface ICrudGeneric<T>
+    public interface IGenericRepository<T>
     {
         T Create(T entity);
         T Upadate(T entity);
         bool Delete(T entity);
         bool Delete(short id);
-        IQueryable<T> GetList();
-        Task<string> SaveFile(IFormFile file);
+        IQueryable<T> GetQuery();
+
 
     }
 }
